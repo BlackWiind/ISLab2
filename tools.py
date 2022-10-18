@@ -1,3 +1,5 @@
+import math
+
 from bitarray import bitarray
 from math import pow
 SBlocks = [[12, 4, 6, 2, 10, 5, 11, 9, 14, 8, 13, 7, 0, 3, 15, 1],
@@ -15,26 +17,42 @@ def read(path, n):
     filebits = bitarray()
     with open(path, 'rb') as fh:
         filebits.fromfile(fh)
-    #print(filebits)
-    # f = open(path)
-    # filebits = bitarray()
-    # filebits.fromfile(f)
     bits = []
+    #print(filebits)
+    # print(len(filebits))
     if len(filebits) == n:
         bits = [filebits]
     else:
-        for i in range(0, len(filebits), n):
+        count = math.ceil(len(filebits) / n)
+        # print(count)
+
+        for i in range(0, count):
+            block_bits = bitarray(n)
+            #print(len(block_bits))
+            block_bits.setall(0)
             begin = i;
             end = i + n
-            bits.append(filebits[begin: end])
+            block_bits ^= filebits[begin: end]
+            bits.append(block_bits)
+            #print("filebits= ",filebits[begin: end])
+
+            #bits[i] ^ filebits[begin: end]
+            #print(bits)
+
+            # bits.append(filebits[begin: end])
     #print(bits)
     return bits
 
 
 def writeBits(bits):
-    bytes = bits.tobytes()
-    f = open("newfile", "wb")
-    f.seek(0); f.write(bytes)
+    array = bitarray()
+    for bit in bits:
+        array.extend(bit)
+    with open("newfile", "wb") as fh:
+        array.tofile(fh)
+    # bytes = bits.tobytes()
+    # f = open("newfile", "wb")
+    # f.seek(0); f.write(bytes)
 def cycleShift11(bits):
     l = bits[: 11]; r = bits[11: ]
     result = bitarray()
