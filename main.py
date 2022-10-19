@@ -1,24 +1,4 @@
-import sys
 import gost
-
-# with open("hello", "rb") as rb:
-#     data = rb.read()
-#
-# with open("key", "rb") as rb:
-#     key = rb.read()
-#
-# cripted_file = gost.ecb(key, data, True)
-# cripted_file = gost.ecb(key, cripted_file, False)
-# print(cripted_file)
-# cripted_file = gost.cbc_encrypt(key, data)
-# cripted_file = gost.cbc_decrypt(key, cripted_file)
-# print(cripted_file)
-# cripted_file = gost.crt(key, data)
-# cripted_file = gost.crt(key, cripted_file)
-# print(cripted_file)
-# cripted_file = gost.ofb_encrypt(key, data)
-# cripted_file = gost.ofb_decrypt(key, cripted_file)
-# print(cripted_file)
 
 
 def main(message_path, key_path, mode):
@@ -34,23 +14,27 @@ def main(message_path, key_path, mode):
 
 
     """
-    print("print")
-    if not sys.argv[1]:
+
+    if not message_path:
         print("Не указан путь к файлу с сообщением")
         return
     with open(message_path, "rb") as rb:
         data = rb.read()
 
-    if not sys.argv[2]:
+    if not key_path:
         print("Не указан путь к файлу с ключем")
         return
     with open(key_path, "rb") as rb:
         key = rb.read()
 
-    if not sys.argv[3]:
+    if not mode:
         print("Не указан режим")
         return
-    #param = sys.argv[3]
+
+    print(f"Данные взятые из файла {message_path}: {data}\n"
+          f"Ключ {key}\n"
+          f"Выбран режим {mode}")
+
     match mode:
         case "ecbc":
             cripted_file = gost.ecb(key, data, True)
@@ -69,7 +53,7 @@ def main(message_path, key_path, mode):
         case _:
             print("Не правильно введён режим")
             return
-    print(f"Результат = {cripted_file}")
+    print(f"Результат = {cripted_file} будет записан в newfile\n")
     with open("newfile", "wb") as fh:
         fh.seek(0)
         fh.write(cripted_file)
@@ -77,5 +61,14 @@ def main(message_path, key_path, mode):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], sys.argv[3])
+    # main(sys.argv[1], sys.argv[2], sys.argv[3])
+    # Превью всех режимов
+    main("hello", "key", "ecbc")
     main("newfile", "key", "ecbd")
+    main("hello", "key", "cbce")
+    main("newfile", "key", "cbcd")
+    main("hello", "key", "crt")
+    main("newfile", "key", "crt")
+    main("hello", "key", "ofbe")
+    main("newfile", "key", "ofbd")
+

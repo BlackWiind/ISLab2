@@ -75,11 +75,6 @@ def validate_key(key):
         raise ValueError("Неверный размер ключа")
 
 
-def validate_iv(iv):
-    if len(iv) != BLOCKSIZE:
-        raise ValueError("Invalid IV size")
-
-
 def xcrypt(seq, sbox, key, ns):
     s = sbox
     w = bytearray(key)
@@ -128,13 +123,8 @@ def cbc_encrypt(key, data, iv=8 * b"\x00", pad=True, sbox=SBOX, mesh=False):
     # Режим cbc шифровка
 
     validate_key(key)
-    # validate_iv(iv)
-    # if not data:
-    #     raise ValueError("Нет данных")
     if pad:
         data = pad2(data, BLOCKSIZE)
-    # if len(data) % BLOCKSIZE != 0:
-    #     raise ValueError("Data is not blocksize aligned")
     ciphertext = [iv]
     for i in xrange(0, len(data), BLOCKSIZE):
         if mesh and i >= MESH_MAX_DATA and i % MESH_MAX_DATA == 0:
@@ -148,10 +138,6 @@ def cbc_encrypt(key, data, iv=8 * b"\x00", pad=True, sbox=SBOX, mesh=False):
 def cbc_decrypt(key, data, pad=True, sbox=SBOX, mesh=False):
     # Режим cbc расшифровка
     validate_key(key)
-    # if not data or len(data) % BLOCKSIZE != 0:
-    #     raise ValueError("Data is not blocksize aligned")
-    # if len(data) < 2 * BLOCKSIZE:
-    #     raise ValueError("There is no either data, or IV in ciphertext")
     iv = data[:BLOCKSIZE]
     plaintext = []
     for i in xrange(BLOCKSIZE, len(data), BLOCKSIZE):
@@ -174,9 +160,6 @@ def crt(key, data, iv=8 * b"\x00", sbox=SBOX):
     # Режим crt, для расшифровки используется эта же функция
 
     validate_key(key)
-    # validate_iv(iv)
-    # if not data:
-    #     raise ValueError("No data supplied")
     n2, n1 = encrypt(sbox, key, block2ns(iv))
     gamma = []
     for _ in xrange(0, len(data) + pad_size(len(data), BLOCKSIZE), BLOCKSIZE):
@@ -200,9 +183,6 @@ def meshing(key, iv, sbox=SBOX):
 def ofb_encrypt(key, data, iv=8 * b"\x00", sbox=SBOX, mesh=False):
 
     validate_key(key)
-    # validate_iv(iv)
-    # if not data:
-    #     raise ValueError("No data supplied")
     ciphertext = [iv]
     for i in xrange(0, len(data) + pad_size(len(data), BLOCKSIZE), BLOCKSIZE):
         if mesh and i >= MESH_MAX_DATA and i % MESH_MAX_DATA == 0:
@@ -222,9 +202,6 @@ def ofb_encrypt(key, data, iv=8 * b"\x00", sbox=SBOX, mesh=False):
 def ofb_decrypt(key, data, iv=8 * b"\x00", sbox=SBOX, mesh=False):
 
     validate_key(key)
-    # validate_iv(iv)
-    # if not data:
-    #     raise ValueError("No data supplied")
     plaintext = []
     data = iv + data
     for i in xrange(BLOCKSIZE, len(data) + pad_size(len(data), BLOCKSIZE), BLOCKSIZE):
