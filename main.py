@@ -1,3 +1,4 @@
+import sys
 import gost
 
 
@@ -61,14 +62,14 @@ def main(message_path, key_path, mode):
 
 
 if __name__ == "__main__":
-    # main(sys.argv[1], sys.argv[2], sys.argv[3])
+    main(sys.argv[1], sys.argv[2], sys.argv[3])
     # Превью всех режимов
-    main("hello", "key", "ecbc")
-    main("newfile", "key", "ecbd")
-    main("hello", "key", "cbce")
-    main("newfile", "key", "cbcd")
-    main("hello", "key", "crt")
-    main("newfile", "key", "crt")
-    main("hello", "key", "ofbe")
-    main("newfile", "key", "ofbd")
+    # main("hello", "key", "ecbc")
+    # main("newfile", "key", "ecbd")
+    # main("hello", "key", "cbce")
+    # main("newfile", "key", "cbcd")
+    # main("hello", "key", "crt")
+    # main("newfile", "key", "crt")
+    # main("hello", "key", "ofbe")
+    # main("newfile", "key", "ofbd")
 
